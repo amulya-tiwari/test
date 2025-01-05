@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beautiful Link Shortener</title>
+  <style>
+    /* General Styles */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(120deg, #4facfe, #00f2fe);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #fff;
+    }
+
+    /* Card Styles */
+    .card {
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      max-width: 450px;
+      width: 100%;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .card h1 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      color: #4facfe;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 1rem;
+      outline: none;
+      transition: border 0.3s ease;
+    }
+
+    .form-control:focus {
+      border: 1px solid #4facfe;
+    }
+
+    .btn {
+      background: linear-gradient(120deg, #4facfe, #00f2fe);
+      color: #fff;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .shortened-link {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      word-wrap: break-word;
+      text-align: center;
+      color: #4facfe;
+    }
+
+    .shortened-link a {
+      color: #00f2fe;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .shortened-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Link Shortener</h1>
+    <form id="linkForm">
+      <input
+        type="url"
+        id="longUrl"
+        class="form-control"
+        placeholder="Enter your long URL"
+        required
+      />
+      <button type="submit" class="btn">Shorten URL</button>
+    </form>
+    <div id="shortenedLink" class="shortened-link" style="display: none;">
+      <p>Shortened URL:</p>
+      <a href="#" id="shortUrl" target="_blank"></a>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("linkForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      // Get the long URL from input
+      const longUrl = document.getElementById("longUrl").value;
+
+      // Simulate shortening the URL
+      const shortUrl = "https://sho.rt/" + Math.random().toString(36).substr(2, 6);
+
+      // Show the shortened link
+      const shortenedLink = document.getElementById("shortenedLink");
+      const shortUrlElement = document.getElementById("shortUrl");
+
+      shortenedLink.style.display = "block";
+      shortUrlElement.textContent = shortUrl;
+      shortUrlElement.href = shortUrl;
+
+      // Clear input
+      document.getElementById("longUrl").value = "";
+    });
+  </script>
+</body>
+</html>
