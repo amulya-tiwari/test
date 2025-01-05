@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Beautiful Link Shortener</title>
+  <title>Currency Converter</title>
   <style>
     /* General Styles */
     body {
@@ -66,64 +66,75 @@
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     }
 
-    .shortened-link {
+    .result {
       margin-top: 20px;
       font-size: 1.2rem;
-      word-wrap: break-word;
-      text-align: center;
       color: #4facfe;
-    }
-
-    .shortened-link a {
-      color: #00f2fe;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    .shortened-link a:hover {
-      text-decoration: underline;
     }
   </style>
 </head>
 <body>
   <div class="card">
-    <h1>Link Shortener</h1>
-    <form id="linkForm">
+    <h1>Currency Converter</h1>
+    <form id="currencyForm">
       <input
-        type="url"
-        id="longUrl"
+        type="number"
+        id="amount"
         class="form-control"
-        placeholder="Enter your long URL"
+        placeholder="Enter amount"
         required
       />
-      <button type="submit" class="btn">Shorten URL</button>
+      <select id="fromCurrency" class="form-control">
+        <option value="" disabled selected>Select your currency</option>
+        <option value="USD">US Dollar (USD)</option>
+        <option value="EUR">Euro (EUR)</option>
+        <option value="GBP">British Pound (GBP)</option>
+        <option value="AUD">Australian Dollar (AUD)</option>
+        <option value="INR">Indian Rupee (INR)</option>
+        <!-- Add more currencies as needed -->
+      </select>
+      <button type="submit" class="btn">Convert to NPR</button>
     </form>
-    <div id="shortenedLink" class="shortened-link" style="display: none;">
-      <p>Shortened URL:</p>
-      <a href="#" id="shortUrl" target="_blank"></a>
-    </div>
+    <div id="result" class="result" style="display: none;"></div>
   </div>
 
   <script>
-    document.getElementById("linkForm").addEventListener("submit", function (e) {
+    // Replace with your API key from https://exchangerate.host/
+    const API_URL = "https://api.exchangerate.host/latest?base=";
+
+    document.getElementById("currencyForm").addEventListener("submit", function (e) {
       e.preventDefault();
 
-      // Get the long URL from input
-      const longUrl = document.getElementById("longUrl").value;
+      const amount = parseFloat(document.getElementById("amount").value);
+      const fromCurrency = document.getElementById("fromCurrency").value;
 
-      // Simulate shortening the URL
-      const shortUrl = "https://sho.rt/" + Math.random().toString(36).substr(2, 6);
+      if (!amount || !fromCurrency) {
+        alert("Please enter a valid amount and select a currency.");
+        return;
+      }
 
-      // Show the shortened link
-      const shortenedLink = document.getElementById("shortenedLink");
-      const shortUrlElement = document.getElementById("shortUrl");
+      fetch(`${API_URL}${fromCurrency}`)
+        .then(response => response.json())
+        .then(data => {
+          const rate = data.rates["NPR"]; // Get the rate for NPR
+          if (!rate) {
+            alert("Exchange rate for NPR is not available.");
+            return;
+          }
 
-      shortenedLink.style.display = "block";
-      shortUrlElement.textContent = shortUrl;
-      shortUrlElement.href = shortUrl;
+          const convertedAmount = (amount * rate).toFixed(2);
 
-      // Clear input
-      document.getElementById("longUrl").value = "";
+          // Show the result
+          const resultDiv = document.getElementById("result");
+          resultDiv.style.display = "block";
+          resultDiv.innerHTML = `
+            ${amount} ${fromCurrency} = <strong>${convertedAmount} NPR</strong>
+          `;
+        })
+        .catch(error => {
+          console.error("Error fetching exchange rates:", error);
+          alert("Failed to fetch exchange rates. Please try again later.");
+        });
     });
   </script>
 </body>
